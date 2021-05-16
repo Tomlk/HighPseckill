@@ -2,6 +2,7 @@ package org.seckill.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 暴露秒杀地址
@@ -9,6 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class Exposer {
 
     //是否开启秒杀

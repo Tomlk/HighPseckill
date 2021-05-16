@@ -23,7 +23,7 @@ public class SuccessKilledDaoTest {
          第一次：insertCount=1
          第二次：insertCount=0
          */
-        long id=1000;
+        long id=1001;
         long phone=12123133111L;
         int insertCount = successKilledDao.insertSuccessKilled(id,phone);
         System.out.println("insertCount="+insertCount);
@@ -31,7 +31,7 @@ public class SuccessKilledDaoTest {
 
     @Test
     public void queryByIdWithSeckill() {
-        long id=1000;
+        long id=1001;
         long phone=12123133111L;
         SuccessKilled successKilled = successKilledDao.queryByIdWithSeckill(id, phone);
         System.out.println(successKilled);

@@ -3,6 +3,7 @@ package org.seckill.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.seckill.entity.SuccessKilled;
 import org.seckill.enums.SeckillStatEnum;
 
@@ -11,6 +12,7 @@ import org.seckill.enums.SeckillStatEnum;
  */
 @Getter
 @Setter
+@ToString
 public class SeckillExecution {
 
     private long seckillId;
