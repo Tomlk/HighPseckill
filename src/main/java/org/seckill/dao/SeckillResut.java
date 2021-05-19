@@ -6,6 +6,7 @@ import lombok.Setter;
 //所有ajax请求返回类型，封装json结果
 @Getter
 @Setter
+//封装json结果
 public class SeckillResut<T> {
 
     private boolean success;
@@ -23,4 +24,5 @@ public class SeckillResut<T> {
         this.success = success;
         this.error = error;
     }
+
 }
