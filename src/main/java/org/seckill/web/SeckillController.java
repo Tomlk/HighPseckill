@@ -52,6 +52,7 @@ public class SeckillController {
             return "forward:/seckill/list";
 
         model.addAttribute("seckill",seckill);
+        System.out.println("进入detail");
         return "detail";
     }
 
@@ -60,9 +61,9 @@ public class SeckillController {
             method = RequestMethod.POST,
             produces = {"application/json;charset=UTF-8"}) //直接浏览器敲无效
     @ResponseBody //json类型
-    public SeckillResut<Exposer> exposer(long seckillId) {
+    public SeckillResut<Exposer> exposer(@PathVariable("seckillId")  Long seckillId) {
         SeckillResut<Exposer> result;
-
+        System.out.println("进入exposer");
         try {
             Exposer exposer = seckillService.exportSeckillUrl(seckillId);//秒杀已经开启
             result=new SeckillResut<Exposer>(true,exposer);
@@ -77,9 +78,11 @@ public class SeckillController {
     @RequestMapping(value="/{seckillId}/{md5}/execution",
     method =RequestMethod.POST,
     produces = {"application/json;charset=UTF-8"})
-    public SeckillResut<SeckillExecution> excute(@PathVariable("seckillId") Long seckillId,
+    @ResponseBody
+    public SeckillResut<SeckillExecution> execute(@PathVariable("seckillId") Long seckillId,
                                                   @PathVariable("md5") String md5,
                                                   @CookieValue(value = "killPhone",required = false) Long phone){
+        System.out.println("进入execution");
         if(phone==null){
             return new SeckillResut<SeckillExecution>(false,"未注册");
         }
@@ -90,20 +93,23 @@ public class SeckillController {
             return new SeckillResut<SeckillExecution>(true,execution);
         }catch (RepeatKillException e){
             SeckillExecution execution=new SeckillExecution(seckillId, SeckillStatEnum.REPEAT_KILL);
-            return new SeckillResut<SeckillExecution>(false,execution);
+            return new SeckillResut<SeckillExecution>(true,execution);
         }catch (SeckillCloseException e){
             SeckillExecution execution=new SeckillExecution(seckillId,SeckillStatEnum.END);
-            return new SeckillResut<SeckillExecution>(false,execution);
+            return new SeckillResut<SeckillExecution>(true,execution);
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
             //TODO
             SeckillExecution execution=new SeckillExecution(seckillId,SeckillStatEnum.INNER_ERROR);
-            return new SeckillResut<SeckillExecution>(false,execution);
+            return new SeckillResut<SeckillExecution>(true,execution);
         }
+
     }
 
     @RequestMapping(value = "/time/now",method = RequestMethod.GET)
+    @ResponseBody
     public SeckillResut<Long> time(){
+        System.out.println("进入time");
         Date now = new Date();
         return new SeckillResut(true,now.getTime());
     }
