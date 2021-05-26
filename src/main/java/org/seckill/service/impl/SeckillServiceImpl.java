@@ -106,29 +106,31 @@ public class SeckillServiceImpl implements SeckillService {
         }
         //执行秒杀逻辑：减库存+记录购买行为
         Date nowTime=new Date();
-        int updateCount=seckillDao.reduceNumber(seckillId,nowTime);
+
 
         try {
-            if(updateCount<=0)
+            //记录购买行为
+            int insertCount=successKilledDao.insertSuccessKilled(seckillId,userPhone);
+            //唯一：seckillId,userPhone
+            if(insertCount<=0)
             {
-                //没有更新到记录,秒杀结束
-                throw new SeckillCloseException("seckill closed");
+                //重复秒杀
+                throw new RepeatKillException("seckill repeated");
             }
-            else{
-                //减库存结束,记录购买行为
-                int insertCount=successKilledDao.insertSuccessKilled(seckillId,userPhone);
-                //唯一：seckillId,userPhone
-                if(insertCount<=0)
+            else {
+                //减库存，热点商品竞争
+                int updateCount=seckillDao.reduceNumber(seckillId,nowTime);
+                if(updateCount<=0)
                 {
-                    //重复秒杀
-                    throw new RepeatKillException("seckill repeated");
-                }
-                else {
-                    //秒杀记录
+                    //没有更新到记录,秒杀结束，rollback
+                    throw new SeckillCloseException("seckill closed");
+                }else{
+                    //秒杀记录 commit
                     SuccessKilled successKilled=successKilledDao.queryByIdWithSeckill(seckillId,userPhone);
                     return new SeckillExecution(seckillId,SeckillStatEnum.SUCCESS,successKilled);
                 }
             }
+
         }catch (SeckillCloseException e1)
         {
             throw e1;
@@ -144,5 +146,10 @@ public class SeckillServiceImpl implements SeckillService {
             throw new SeckillException("seckill inner error:"+e.getMessage());
         }
 
+    }
+
+    @Override
+    public SeckillExecution executeSeckillByProcedure(long seckillId, long userPhone, String md5) throws SeckillException, RepeatKillException, SeckillCloseException {
+        return null; //TODO
     }
 }
