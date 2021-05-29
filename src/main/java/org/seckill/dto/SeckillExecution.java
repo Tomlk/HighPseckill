@@ -35,4 +35,6 @@ public class SeckillExecution {
         this.state = statEnum.getState();
         this.stateInfo = statEnum.getStateInfo();
     }
+
+
 }

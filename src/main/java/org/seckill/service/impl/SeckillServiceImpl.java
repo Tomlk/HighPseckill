@@ -164,8 +164,11 @@ public class SeckillServiceImpl implements SeckillService {
         map.put("result",null);
         try {
             seckillDao.killByProcedure(map);
-            //获取result
-            int result = MapUtils.getInteger(map, "result", -2);
+            //获取result，网页返回的是字符串
+
+            //抛出反射异常 InvocationTargetException
+            //int result = MapUtils.getInteger(map, "result", -2);
+            int result=(int)map.get("result");
             if(result==1){
                 SuccessKilled sk=successKilledDao.queryByIdWithSeckill(seckillId,userPhone);
                 return new SeckillExecution(seckillId,SeckillStatEnum.SUCCESS,sk);

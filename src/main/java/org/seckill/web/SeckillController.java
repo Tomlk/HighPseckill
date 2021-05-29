@@ -91,6 +91,7 @@ public class SeckillController {
         try {
             //通过存储过程去调用
             SeckillExecution execution = seckillService.executeSeckillByProcedure(seckillId, phone, md5);
+            System.out.println(execution);
             return new SeckillResut<SeckillExecution>(true,execution);
         }catch (RepeatKillException e){
             SeckillExecution execution=new SeckillExecution(seckillId, SeckillStatEnum.REPEAT_KILL);
